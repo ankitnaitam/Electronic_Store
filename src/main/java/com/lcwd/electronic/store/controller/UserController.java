@@ -81,9 +81,11 @@ public class UserController {
     @GetMapping
     public ResponseEntity<List<UserDto>> getAllUser(
             @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
-            @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize) {
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
+            @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
+            @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir) {
         log.info("Initiated request to get all User details");
-        return new ResponseEntity<>(this.service.getAllUser(pageNumber,pageSize), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.service.getAllUser(pageNumber, pageSize, sortBy, sortDir), HttpStatus.FOUND);
     }
 
     //get single by id

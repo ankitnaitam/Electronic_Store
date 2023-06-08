@@ -7,11 +7,11 @@ import com.lcwd.electronic.store.helper.AppConstants;
 import com.lcwd.electronic.store.repositories.UserRepository;
 import com.lcwd.electronic.store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.type.LocalDateTimeType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -81,9 +81,10 @@ public class UserServiceImpl implements UserService {
      * @implNote This implementation is to get all user data
      */
     @Override
-    public List<UserDto> getAllUser(Integer pageNumber, Integer pageSize) {
+    public List<UserDto> getAllUser(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
         log.info("Initiated dao call to get all user details");
-        PageRequest request = PageRequest.of(pageNumber, pageSize);
+        Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+        PageRequest request = PageRequest.of(pageNumber, pageSize, sort);
         Page<User> pageUser = this.userRepo.findAll(request);
         List<User> users = pageUser.getContent();
         List<UserDto> userDtos = users.stream().map((user) -> this.mapper.map(user, UserDto.class)).collect(Collectors.toList());
