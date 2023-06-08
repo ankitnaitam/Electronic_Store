@@ -10,6 +10,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.hibernate.type.LocalDateTimeType;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -79,9 +81,11 @@ public class UserServiceImpl implements UserService {
      * @implNote This implementation is to get all user data
      */
     @Override
-    public List<UserDto> getAllUser() {
+    public List<UserDto> getAllUser(Integer pageNumber, Integer pageSize) {
         log.info("Initiated dao call to get all user details");
-        List<User> users = this.userRepo.findAll();
+        PageRequest request = PageRequest.of(pageNumber, pageSize);
+        Page<User> pageUser = this.userRepo.findAll(request);
+        List<User> users = pageUser.getContent();
         List<UserDto> userDtos = users.stream().map((user) -> this.mapper.map(user, UserDto.class)).collect(Collectors.toList());
         log.info("Completed dao call to get all user details");
         return userDtos;

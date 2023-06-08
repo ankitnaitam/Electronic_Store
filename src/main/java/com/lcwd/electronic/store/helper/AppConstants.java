@@ -1,5 +1,7 @@
 package com.lcwd.electronic.store.helper;
 
+import javax.swing.plaf.PanelUI;
+
 public class AppConstants {
 
     //ResourceNotFoundException
@@ -8,4 +10,8 @@ public class AppConstants {
 
     //user
     public static final String USER_DELETE = "User deleted successfully with user_id :";
+
+    //Default values user controller
+    public static final String PAGE_NUMBER="0";
+    public static final String PAGE_SIZE="5";
 }

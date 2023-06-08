@@ -58,7 +58,6 @@ public class UserController {
 
     /**
      * @param userId
-     * @return
      * @author Ankit
      * @apiNote This Api is to delete user
      */
@@ -73,14 +72,18 @@ public class UserController {
     //get all
 
     /**
+     * @param pageNumber
+     * @param pageSize
      * @return List<UserDto>
      * @author Ankit
      * @apiNote This Api is to get all user data
      */
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUser() {
+    public ResponseEntity<List<UserDto>> getAllUser(
+            @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
+            @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize) {
         log.info("Initiated request to get all User details");
-        return new ResponseEntity<>(this.service.getAllUser(), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.service.getAllUser(pageNumber,pageSize), HttpStatus.FOUND);
     }
 
     //get single by id
@@ -107,7 +110,7 @@ public class UserController {
      * @apiNote This Api is to get single user data by email
      */
     @GetMapping(ApiConstants.USER_EMAIL)
-    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
+    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
         log.info("Initiated request to get User by email:{}", email);
         return new ResponseEntity<>(this.service.getUserByEmail(email), HttpStatus.FOUND);
     }
@@ -121,7 +124,7 @@ public class UserController {
      * @apiNote This Api is for search user containing keyword
      */
     @GetMapping(ApiConstants.USER_KEYWORD)
-    public ResponseEntity<List<UserDto>> searchUser(@RequestParam String keyword) {
+    public ResponseEntity<List<UserDto>> searchUser(@PathVariable String keyword) {
         log.info("Initiated request for search the User with keyword containing:{}", keyword);
         return new ResponseEntity<>(this.service.searchUser(keyword), HttpStatus.FOUND);
     }
