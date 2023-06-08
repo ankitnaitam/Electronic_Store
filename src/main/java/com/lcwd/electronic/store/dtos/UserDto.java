@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.dtos;
 
+import com.lcwd.electronic.store.validate.ImageNameValid;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -34,5 +35,6 @@ public class UserDto extends CustomeFieldsDto{
     @NotBlank(message = "Write something about yourself !!")
     private String about;
 
+    @ImageNameValid
     private String imageName;
 }
