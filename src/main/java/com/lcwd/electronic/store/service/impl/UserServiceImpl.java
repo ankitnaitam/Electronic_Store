@@ -1,9 +1,11 @@
 package com.lcwd.electronic.store.service.impl;
 
+import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.entities.User;
 import com.lcwd.electronic.store.exceptions.ResourceNotFoundException;
 import com.lcwd.electronic.store.helper.AppConstants;
+import com.lcwd.electronic.store.helper.PageResponseHelper;
 import com.lcwd.electronic.store.repositories.UserRepository;
 import com.lcwd.electronic.store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
@@ -81,15 +83,14 @@ public class UserServiceImpl implements UserService {
      * @implNote This implementation is to get all user data
      */
     @Override
-    public List<UserDto> getAllUser(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
+    public PageableResponse<UserDto> getAllUser(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
         log.info("Initiated dao call to get all user details");
         Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         PageRequest request = PageRequest.of(pageNumber, pageSize, sort);
         Page<User> pageUser = this.userRepo.findAll(request);
-        List<User> users = pageUser.getContent();
-        List<UserDto> userDtos = users.stream().map((user) -> this.mapper.map(user, UserDto.class)).collect(Collectors.toList());
+        PageableResponse<UserDto> response = PageResponseHelper.getPageableResponse(pageUser, UserDto.class);
         log.info("Completed dao call to get all user details");
-        return userDtos;
+        return response;
     }
 
     /**

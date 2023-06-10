@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.controller;
 
+import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.helper.ApiConstants;
 import com.lcwd.electronic.store.helper.AppConstants;
@@ -79,7 +80,7 @@ public class UserController {
      * @apiNote This Api is to get all user data
      */
     @GetMapping
-    public ResponseEntity<List<UserDto>> getAllUser(
+    public ResponseEntity<PageableResponse<UserDto>> getAllUser(
             @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = AppConstants.PAGE_SIZE, required = false) Integer pageSize,
             @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
