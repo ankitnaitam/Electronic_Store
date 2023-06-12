@@ -11,12 +11,17 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 @RestController
@@ -144,8 +149,16 @@ public class UserController {
         return new ResponseEntity<>(this.service.searchUser(keyword), HttpStatus.FOUND);
     }
 
-    @PostMapping("/image/{userId}")
+    /**
+     * @param image
+     * @param userId
+     * @return
+     * @throws IOException
+     * @author Ankit
+     */
+    @PostMapping(ApiConstants.USER_IMAGE)
     public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam("userImage") MultipartFile image, @PathVariable String userId) throws IOException {
+        log.info("Initiated request for uploading User image with id :{}", userId);
         String imageName = fileService.uploadFile(image, imageUploadPath);
         //update image
         UserDto user = service.getUserById(userId);
@@ -153,6 +166,24 @@ public class UserController {
         UserDto userDto = service.updateUser(user, userId);
         //build image response
         ImageResponse imageResponse = ImageResponse.builder().imageName(imageName).message(AppConstants.IMAGE_UPLOADED).success(true).status(HttpStatus.CREATED).build();
+        log.info("Completed request for uploading User image with id :{}", userId);
         return new ResponseEntity<>(imageResponse, HttpStatus.CREATED);
+    }
+
+    /**
+     * @param userId
+     * @param response
+     * @throws IOException
+     * @author Ankit
+     */
+    @GetMapping(ApiConstants.USER_IMAGE)
+    public void serveUserImage(@PathVariable String userId, HttpServletResponse response) throws IOException {
+        log.info("Initiated request for serve User image having id :{}", userId);
+        UserDto user = service.getUserById(userId);
+        log.info("User image name :{}", user.getImageName());
+        InputStream resource = fileService.getResource(imageUploadPath, user.getImageName());
+        response.setContentType(MediaType.IMAGE_JPEG_VALUE);
+        StreamUtils.copy(resource, response.getOutputStream());
+        log.info("Completed request for serve User image having id :{}", userId);
     }
 }
