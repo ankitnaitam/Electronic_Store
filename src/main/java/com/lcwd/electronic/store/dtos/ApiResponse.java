@@ -1,12 +1,11 @@
 package com.lcwd.electronic.store.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
+import org.springframework.http.HttpStatus;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ApiResponse {
@@ -14,4 +13,6 @@ public class ApiResponse {
     private String message;
 
     private Boolean success;
+
+    private HttpStatus status;
 }

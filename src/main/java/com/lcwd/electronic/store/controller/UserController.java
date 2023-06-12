@@ -1,17 +1,22 @@
 package com.lcwd.electronic.store.controller;
 
+import com.lcwd.electronic.store.dtos.ImageResponse;
 import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.helper.ApiConstants;
 import com.lcwd.electronic.store.helper.AppConstants;
+import com.lcwd.electronic.store.service.FileService;
 import com.lcwd.electronic.store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -21,6 +26,13 @@ public class UserController {
 
     @Autowired
     private UserService service;
+
+    @Autowired
+    private FileService fileService;
+
+    @Value("${user.profile.image.path}")
+    private String imageUploadPath;
+
 
     //create
 
@@ -130,5 +142,17 @@ public class UserController {
     public ResponseEntity<List<UserDto>> searchUser(@PathVariable String keyword) {
         log.info("Initiated request for search the User with keyword containing:{}", keyword);
         return new ResponseEntity<>(this.service.searchUser(keyword), HttpStatus.FOUND);
+    }
+
+    @PostMapping("/image/{userId}")
+    public ResponseEntity<ImageResponse> uploadUserImage(@RequestParam("userImage") MultipartFile image, @PathVariable String userId) throws IOException {
+        String imageName = fileService.uploadFile(image, imageUploadPath);
+        //update image
+        UserDto user = service.getUserById(userId);
+        user.setImageName(imageName);
+        UserDto userDto = service.updateUser(user, userId);
+        //build image response
+        ImageResponse imageResponse = ImageResponse.builder().imageName(imageName).message(AppConstants.IMAGE_UPLOADED).success(true).status(HttpStatus.CREATED).build();
+        return new ResponseEntity<>(imageResponse, HttpStatus.CREATED);
     }
 }
