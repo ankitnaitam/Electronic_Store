@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -30,7 +29,7 @@ import java.util.List;
 public class UserController {
 
     @Autowired
-    private UserService service;
+    private UserService userService;
 
     @Autowired
     private FileService fileService;
@@ -50,7 +49,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto) {
         log.info("Initiated request for save the User details");
-        UserDto newUser = this.service.createUser(userDto);
+        UserDto newUser = this.userService.createUser(userDto);
         log.info("Completed request for save the User details");
         return new ResponseEntity<>(newUser, HttpStatus.CREATED);
     }
@@ -67,7 +66,7 @@ public class UserController {
     @PutMapping(ApiConstants.USER_ID)
     public ResponseEntity<UserDto> updateUser(@Valid @RequestBody UserDto userDto, @PathVariable("userId") String userId) {
         log.info("Initiated request for update the User details with userId:{}", userId);
-        UserDto updatedUser = this.service.updateUser(userDto, userId);
+        UserDto updatedUser = this.userService.updateUser(userDto, userId);
         log.info("Completed request for update the User details with userId:{}", userId);
         return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
     }
@@ -82,9 +81,9 @@ public class UserController {
     @DeleteMapping(ApiConstants.USER_ID)
     public ResponseEntity<String> deleteUser(@PathVariable String userId) {
         log.info("Initiated request for delete the User with userId:{}", userId);
-        this.service.deleteUser(userId);
+        this.userService.deleteUser(userId);
         log.info("Completed request for delete the User with userId:{}", userId);
-        return new ResponseEntity<>(AppConstants.USER_DELETE + userId, HttpStatus.OK);
+        return new ResponseEntity<>(AppConstants.USER_DELETED + userId, HttpStatus.OK);
     }
 
     //get all
@@ -103,7 +102,7 @@ public class UserController {
             @RequestParam(value = "sortBy", defaultValue = AppConstants.SORT_BY, required = false) String sortBy,
             @RequestParam(value = "sortDir", defaultValue = AppConstants.SORT_DIR, required = false) String sortDir) {
         log.info("Initiated request to get all User details");
-        return new ResponseEntity<>(this.service.getAllUser(pageNumber, pageSize, sortBy, sortDir), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.userService.getAllUser(pageNumber, pageSize, sortBy, sortDir), HttpStatus.FOUND);
     }
 
     //get single by id
@@ -117,7 +116,7 @@ public class UserController {
     @GetMapping(ApiConstants.USER_ID)
     public ResponseEntity<UserDto> getUserById(@PathVariable String userId) {
         log.info("Initiated request to get single User details with userId:{}", userId);
-        return new ResponseEntity<>(this.service.getUserById(userId), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.userService.getUserById(userId), HttpStatus.FOUND);
     }
 
 
@@ -132,7 +131,7 @@ public class UserController {
     @GetMapping(ApiConstants.USER_EMAIL)
     public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
         log.info("Initiated request to get User by email:{}", email);
-        return new ResponseEntity<>(this.service.getUserByEmail(email), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.userService.getUserByEmail(email), HttpStatus.FOUND);
     }
 
     //search user
@@ -146,7 +145,7 @@ public class UserController {
     @GetMapping(ApiConstants.USER_KEYWORD)
     public ResponseEntity<List<UserDto>> searchUser(@PathVariable String keyword) {
         log.info("Initiated request for search the User with keyword containing:{}", keyword);
-        return new ResponseEntity<>(this.service.searchUser(keyword), HttpStatus.FOUND);
+        return new ResponseEntity<>(this.userService.searchUser(keyword), HttpStatus.FOUND);
     }
 
     /**
@@ -161,9 +160,9 @@ public class UserController {
         log.info("Initiated request for uploading User image with id :{}", userId);
         String imageName = fileService.uploadFile(image, imageUploadPath);
         //update image
-        UserDto user = service.getUserById(userId);
+        UserDto user = userService.getUserById(userId);
         user.setImageName(imageName);
-        UserDto userDto = service.updateUser(user, userId);
+        UserDto userDto = userService.updateUser(user, userId);
         //build image response
         ImageResponse imageResponse = ImageResponse.builder().imageName(imageName).message(AppConstants.IMAGE_UPLOADED).success(true).status(HttpStatus.CREATED).build();
         log.info("Completed request for uploading User image with id :{}", userId);
@@ -179,7 +178,7 @@ public class UserController {
     @GetMapping(ApiConstants.USER_IMAGE)
     public void serveUserImage(@PathVariable String userId, HttpServletResponse response) throws IOException {
         log.info("Initiated request for serve User image having id :{}", userId);
-        UserDto user = service.getUserById(userId);
+        UserDto user = userService.getUserById(userId);
         log.info("User image name :{}", user.getImageName());
         InputStream resource = fileService.getResource(imageUploadPath, user.getImageName());
         response.setContentType(MediaType.IMAGE_JPEG_VALUE);

@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto updateUser(UserDto userDto, String userId) {
-        log.info("Initiated dao call for update the user details with userId:{}", userId);
+        log.info("Initiated dao call for update the user details with userId :{}", userId);
         User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
         user.setName(userDto.getName());
         user.setAbout(userDto.getAbout());
@@ -60,9 +60,9 @@ public class UserServiceImpl implements UserService {
         user.setImageName(userDto.getImageName());
         user.setIsActive(userDto.getIsActive());         //custome fields
         user.setModifiedBy(userDto.getModifiedBy());
-       // user.setModifiedOn(userDto.getModifiedOn());
+        // user.setModifiedOn(userDto.getModifiedOn());   //automatically modified bz of @UpdateTimestamp
         User updatedUser = this.userRepo.save(user);
-        log.info("Completed dao call for update the user details with userId:{}", userId);
+        log.info("Completed dao call for update the user details with userId :{}", userId);
         return this.mapper.map(updatedUser, UserDto.class);
     }
 
@@ -72,10 +72,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public void deleteUser(String userId) {
-        log.info("Initiated dao call for delete the user with userId:{}", userId);
+        log.info("Initiated dao call for delete the user with userId :{}", userId);
         User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
         this.userRepo.delete(user);
-        log.info("Completed dao call for delete the user with userId:{}", userId);
+        log.info("Completed dao call for delete the user with userId  :{}", userId);
     }
 
     /**
@@ -84,12 +84,12 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public PageableResponse<UserDto> getAllUser(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
-        log.info("Initiated dao call to get all user details");
+        log.info("Initiated dao call to get all user details with pageNumber:{}, pageSize:{}, sortBy:{}, sortDir:{}", pageNumber, pageSize, sortBy, sortDir);
         Sort sort = (sortDir.equalsIgnoreCase("asc")) ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
         PageRequest request = PageRequest.of(pageNumber, pageSize, sort);
         Page<User> pageUser = this.userRepo.findAll(request);
         PageableResponse<UserDto> response = PageResponseHelper.getPageableResponse(pageUser, UserDto.class);
-        log.info("Completed dao call to get all user details");
+        log.info("Completed dao call to get all user details with pageNumber:{}, pageSize:{}, sortBy:{}, sortDir:{}", pageNumber, pageSize, sortBy, sortDir);
         return response;
     }
 
@@ -99,9 +99,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getUserById(String userId) {
-        log.info("Initiated dao call to get single user details with userId:{}", userId);
+        log.info("Initiated dao call to get single user details with userId :{}", userId);
         User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
-        log.info("Completed dao call to get single user details with userId:{}", userId);
+        log.info("Completed dao call to get single user details with userId :{}", userId);
         return this.mapper.map(user, UserDto.class);
     }
 
@@ -111,9 +111,9 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public UserDto getUserByEmail(String email) {
-        log.info("Initiated dao call to get user details with email:{}", email);
+        log.info("Initiated dao call to get user details with email :{}", email);
         User user = this.userRepo.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND_WITH_EMAIL + email));
-        log.info("Completed dao call to get user details with email:{}", email);
+        log.info("Completed dao call to get user details with email :{}", email);
         return this.mapper.map(user, UserDto.class);
     }
 
@@ -123,10 +123,10 @@ public class UserServiceImpl implements UserService {
      */
     @Override
     public List<UserDto> searchUser(String keyword) {
-        log.info("Initiated dao call for search user with keyword containing:{}", keyword);
+        log.info("Initiated dao call for search user with keyword containing :{}", keyword);
         List<User> users = this.userRepo.findByNameContaining(keyword);
         List<UserDto> dtos = users.stream().map((user) -> this.mapper.map(user, UserDto.class)).collect(Collectors.toList());
-        log.info("Completed dao call for search user with keyword containing:{}", keyword);
+        log.info("Completed dao call for search user with keyword containing :{}", keyword);
         return dtos;
     }
 
