@@ -1,9 +1,9 @@
 package com.lcwd.electronic.store.controller;
 
-import com.lcwd.electronic.store.dtos.ApiResponse;
 import com.lcwd.electronic.store.dtos.CategoryDto;
 import com.lcwd.electronic.store.dtos.ImageResponse;
 import com.lcwd.electronic.store.dtos.PageableResponse;
+import com.lcwd.electronic.store.helper.ApiConstants;
 import com.lcwd.electronic.store.helper.AppConstants;
 import com.lcwd.electronic.store.service.CategoryService;
 import com.lcwd.electronic.store.service.FileService;
@@ -19,14 +19,13 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/categories/")
+@RequestMapping(ApiConstants.CATE_BASE_URL)
 public class CategoryController {
 
     @Autowired
@@ -39,6 +38,13 @@ public class CategoryController {
     private String coverImageUploadPath;
 
     //create
+
+    /**
+     * @param categoryDto
+     * @return
+     * @author Ankit
+     * @apiNote This api is for creating category data
+     */
     @PostMapping
     public ResponseEntity<CategoryDto> createCategory(@Valid @RequestBody CategoryDto categoryDto) {
         log.info("Initialized request for save category data");
@@ -48,7 +54,15 @@ public class CategoryController {
     }
 
     //update
-    @PutMapping("/{categoryId}")
+
+    /**
+     * @param categoryDto
+     * @param categoryId
+     * @return
+     * @author Ankit
+     * @apiNote This api is for update category data
+     */
+    @PutMapping(ApiConstants.CATE_ID)
     public ResponseEntity<CategoryDto> updateCategory(@Valid @RequestBody CategoryDto categoryDto, @PathVariable String categoryId) {
         log.info("Initialized request for update category data having id:{}", categoryId);
         CategoryDto updatedCategory = this.categoryService.updateCategory(categoryDto, categoryId);
@@ -57,7 +71,14 @@ public class CategoryController {
     }
 
     //delete
-    @DeleteMapping("/{categoryId}")
+
+    /**
+     * @param categoryId
+     * @return
+     * @author Ankit
+     * @apiNote This api is for delete category data
+     */
+    @DeleteMapping(ApiConstants.CATE_ID)
     public ResponseEntity<String> deleteCategory(@PathVariable String categoryId) {
         log.info("Initialized request for delete category data with id:{}", categoryId);
         this.categoryService.deleteCategory(categoryId);
@@ -66,6 +87,16 @@ public class CategoryController {
     }
 
     //get all
+
+    /**
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     * @author Ankit
+     * @apiNote This api is for get categories
+     */
     @GetMapping
     public ResponseEntity<PageableResponse<CategoryDto>> getCategories(
             @RequestParam(value = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
@@ -79,20 +110,42 @@ public class CategoryController {
     }
 
     //get single category data
-    @GetMapping("/{categoryId}")
+
+    /**
+     * @param categoryId
+     * @return
+     * @author Ankit
+     * @apiNote This api is for get single category data
+     */
+    @GetMapping(ApiConstants.CATE_ID)
     public ResponseEntity<CategoryDto> getCategoryById(@PathVariable String categoryId) {
         log.info("Request for get single category data with id:{}", categoryId);
         return new ResponseEntity<>(this.categoryService.getCategoryById(categoryId), HttpStatus.FOUND);
     }
 
     //search
-    @GetMapping("/search")
+
+    /**
+     * @param keyword
+     * @return
+     * @author Ankit
+     * @apiNote This api is for search category
+     */
+    @GetMapping(ApiConstants.CATE_SEARCH)
     public ResponseEntity<List<CategoryDto>> searchByTitle(@RequestParam String keyword) {
         log.info("Request for get categories data with keyword:{}", keyword);
         return new ResponseEntity<>(this.categoryService.searchByTitle(keyword), HttpStatus.FOUND);
     }
 
-    @PostMapping("/image/{categoryId}")
+    /**
+     * @param image
+     * @param categoryId
+     * @return
+     * @throws IOException
+     * @author Ankit
+     * @apiNote This api is for upload cover image
+     */
+    @PostMapping(ApiConstants.CATE_IMG)
     public ResponseEntity<ImageResponse> uploadCoverImage(
             @RequestParam("coverImage") MultipartFile image,
             @PathVariable String categoryId) throws IOException {
@@ -108,7 +161,14 @@ public class CategoryController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
-    @GetMapping("/image/{categoryId}")
+    /**
+     * @param categoryId
+     * @param response
+     * @throws IOException
+     * @author Ankit
+     * @apiNote This api is for serve cover image
+     */
+    @GetMapping(ApiConstants.CATE_IMG)
     public void serveCoverImage(@PathVariable String categoryId, HttpServletResponse response) throws IOException {
         log.info("Initiated request for serve category cover image with id :{}", categoryId);
         CategoryDto categoryDto = this.categoryService.getCategoryById(categoryId);

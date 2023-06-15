@@ -4,9 +4,17 @@ public class ApiConstants {
 
     //User Api
     public static final String USER_BASE_URL = "/api/users/";
-    public static final String USER_ID = "/{userId}/";
-    public static final String USER_EMAIL = "/email/";
-    public static final String USER_KEYWORD = "/keyword/";
-
+    public static final String USER_ID = "/{userId}";
+    public static final String USER_EMAIL = "/email";
+    public static final String USER_KEYWORD = "/keyword";
     public static final String USER_IMAGE = "/image/{userId}";
+
+    //Category Api
+    public static final String CATE_BASE_URL="/api/categories/";
+    public static final String CATE_ID="/{categoryId}";
+    public static final String CATE_SEARCH="/search";
+    public static final String CATE_IMG="/image/{categoryId}";
+
+
+
 }
