@@ -11,11 +11,16 @@ import com.lcwd.electronic.store.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -26,8 +31,12 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private UserRepository userRepo;
+
     @Autowired
     private ModelMapper mapper;
+
+    @Value("${user.profile.image.path}")
+    private String imageUploadPath;
 
     /**
      * @author Ankit
@@ -74,6 +83,18 @@ public class UserServiceImpl implements UserService {
     public void deleteUser(String userId) {
         log.info("Initiated dao call for delete the user with userId :{}", userId);
         User user = this.userRepo.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
+        //delete user image
+        String fullPath = imageUploadPath + user.getImageName();
+        try {
+            Path path = Path.of(fullPath);
+            Files.delete(path);
+        } catch (FileNotFoundException ex) {
+            log.info("User image not found in folder");
+            ex.getStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        //delete user
         this.userRepo.delete(user);
         log.info("Completed dao call for delete the user with userId  :{}", userId);
     }

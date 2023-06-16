@@ -11,11 +11,16 @@ import com.lcwd.electronic.store.service.CategoryService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -29,6 +34,9 @@ public class CategoryServiceImpl implements CategoryService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Value("${category.profile.image.path}")
+    private String coverImagePath;
 
     /**
      * @param categoryDto
@@ -75,6 +83,18 @@ public class CategoryServiceImpl implements CategoryService {
     public void deleteCategory(String categoryId) {
         log.info("Initiated dao call for delete category with id :{}", categoryId);
         Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CATE_NOT_FOUND + categoryId));
+        //delete cover image
+        String fullPath = coverImagePath + category.getCoverImage();
+        try {
+            Path path = Path.of(fullPath);
+            Files.delete(path);
+        } catch (FileNotFoundException ex) {
+            log.info("Category cover image not found in folder");
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        //delete category
         this.categoryRepository.deleteById(categoryId);
         log.info("Completed dao call for delete category with id :{}", category);
     }
