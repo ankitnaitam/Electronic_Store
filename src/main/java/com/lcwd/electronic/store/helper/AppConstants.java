@@ -10,6 +10,8 @@ public class AppConstants {
 
     public static final String CATE_NOT_FOUND = "Category not found with category_id :";
 
+    public static final String PROD_NOT_FOUND="Product not found with product_id :";
+
     //user
     public static final String USER_DELETED = "User deleted successfully with user_id :";
     //category
