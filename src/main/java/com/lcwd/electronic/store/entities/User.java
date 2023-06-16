@@ -1,15 +1,8 @@
 package com.lcwd.electronic.store.entities;
 
 import lombok.*;
-import net.bytebuddy.utility.RandomString;
-import org.hibernate.annotations.Generated;
-import org.springframework.data.annotation.CreatedBy;
-import org.springframework.data.annotation.LastModifiedBy;
 
 import javax.persistence.*;
-import java.util.Random;
-import java.util.random.RandomGenerator;
-import java.util.random.RandomGeneratorFactory;
 
 @Entity
 @NoArgsConstructor
@@ -18,7 +11,7 @@ import java.util.random.RandomGeneratorFactory;
 @Getter
 @Builder
 @Table(name = "user_details")
-public class User extends CustomeFields{
+public class User extends CustomFields {
 
     @Id
     @Column(name = "user_id")

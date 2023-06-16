@@ -14,7 +14,7 @@ import javax.persistence.Table;
 @AllArgsConstructor
 @Builder
 @Table(name = "categories")
-public class Category {
+public class Category extends CustomFields {
 
     @Id
     @Column(name = "category_id")

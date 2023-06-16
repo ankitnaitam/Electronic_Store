@@ -3,8 +3,6 @@ package com.lcwd.electronic.store.dtos;
 import com.lcwd.electronic.store.validate.ImageNameValid;
 import lombok.*;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
@@ -14,7 +12,7 @@ import javax.validation.constraints.Size;
 @Setter
 @Getter
 @Builder
-public class UserDto extends CustomeFieldsDto{
+public class UserDto extends CustomFieldsDto {
 
     private String userId;
 

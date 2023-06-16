@@ -2,7 +2,6 @@ package com.lcwd.electronic.store.dtos;
 
 import lombok.*;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
@@ -11,7 +10,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class CategoryDto {
+public class CategoryDto extends CustomFieldsDto {
 
     private String categoryId;
 
