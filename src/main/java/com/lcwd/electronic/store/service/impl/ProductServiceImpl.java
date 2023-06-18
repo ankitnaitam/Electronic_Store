@@ -15,10 +15,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
-@Repository
+@Service
 @Slf4j
 public class ProductServiceImpl implements ProductService {
 
@@ -130,7 +131,7 @@ public class ProductServiceImpl implements ProductService {
         log.info("Initialized dao call for get all live product details having pageNumber :{},pageSize :{},sortBy :{},sortDir :{}", pageNumber, pageSize, sortBy, sortDir);
         Sort sort = (sortDir.equalsIgnoreCase("asc")) ? (Sort.by(sortBy).ascending()) : (Sort.by(sortBy).descending());
         PageRequest request = PageRequest.of(pageNumber, pageSize, sort);
-        Page<Product> productPage = this.productRepo.findByIsActive(request);
+        Page<Product> productPage = this.productRepo.findByIsActiveTrue(request);
         PageableResponse<ProductDto> response = PageResponseHelper.getPageableResponse(productPage, ProductDto.class);
         log.info("Completed dao call for get all live product details having pageNumber :{},pageSize :{},sortBy :{},sortDir :{}", pageNumber, pageSize, sortBy, sortDir);
         return response;

@@ -5,6 +5,7 @@ import lombok.*;
 import javax.persistence.Column;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Setter
@@ -23,10 +24,10 @@ public class ProductDto extends CustomFieldsDto {
     @NotBlank(message = "Description should not be blank !!")
     private String productDescription;
 
-    @NotEmpty
+    @NotNull
     private Double price;
 
-    @NotEmpty
+    @NotNull
     private Double discountPrice;
 
     @NonNull

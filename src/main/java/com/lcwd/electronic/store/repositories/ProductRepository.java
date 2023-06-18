@@ -13,5 +13,5 @@ public interface ProductRepository extends JpaRepository<Product, String> {
 
     List<Product> findByProductTitleContaining(String subTitle,PageRequest request);
 
-    Page<Product> findByIsActive(PageRequest request);
+    Page<Product> findByIsActiveTrue(PageRequest request);
 }
