@@ -2,6 +2,8 @@ package com.lcwd.electronic.store.controller;
 
 import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.ProductDto;
+import com.lcwd.electronic.store.helper.ApiConstants;
+import com.lcwd.electronic.store.helper.AppConstants;
 import com.lcwd.electronic.store.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +15,20 @@ import javax.validation.Valid;
 
 @RestController
 @Slf4j
-@RequestMapping("/api/products")
+@RequestMapping(ApiConstants.PROD_BASE_URL)
 public class ProductController {
 
     @Autowired
     private ProductService productService;
 
     //create
+
+    /**
+     * @param productDto
+     * @return
+     * @author Ankit
+     * @apiNote This api is for save product details
+     */
     @PostMapping
     public ResponseEntity<ProductDto> createProduct(@Valid @RequestBody ProductDto productDto) {
         log.info("Initiated request for save product details");
@@ -29,7 +38,15 @@ public class ProductController {
     }
 
     //update
-    @PutMapping("/{productId}")
+
+    /**
+     * @param productDto
+     * @param productId
+     * @return
+     * @author Ankit
+     * @apiNote This api is for update product details
+     */
+    @PutMapping(ApiConstants.PROD_ID)
     public ResponseEntity<ProductDto> updateProduct(@Valid @RequestBody ProductDto productDto, @PathVariable String productId) {
         log.info("Initiated request for update product details with id :{}", productId);
         ProductDto updatedProduct = this.productService.updateProduct(productDto, productId);
@@ -37,9 +54,15 @@ public class ProductController {
         return new ResponseEntity<>(updatedProduct, HttpStatus.CREATED);
     }
 
-
     //delete
-    @DeleteMapping("/{productId}")
+
+    /**
+     * @param productId
+     * @return
+     * @author Ankit
+     * @apiNote This api is for delete product details
+     */
+    @DeleteMapping(ApiConstants.PROD_ID)
     public ResponseEntity<String> deleteProduct(@PathVariable String productId) {
         log.info("Initiated request for delete product with id:{}", productId);
         this.productService.deleteProduct(productId);
@@ -48,14 +71,31 @@ public class ProductController {
     }
 
     //get single
-    @GetMapping("/{productId}")
+
+    /**
+     * @param productId
+     * @return
+     * @author Ankit
+     * @apiNote This api is for get single product details
+     */
+    @GetMapping(ApiConstants.PROD_ID)
     public ResponseEntity<ProductDto> getProduct(@PathVariable String productId) {
         ProductDto product = this.productService.getProduct(productId);
         return new ResponseEntity<>(product, HttpStatus.FOUND);
     }
 
     //get all
-    @GetMapping("/")
+
+    /**
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     * @author Ankit
+     * @apiNote This api is for get all products
+     */
+    @GetMapping()
     public ResponseEntity<PageableResponse<ProductDto>> getProducts(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
@@ -67,9 +107,18 @@ public class ProductController {
         return new ResponseEntity<>(products, HttpStatus.FOUND);
     }
 
-
     //get all:isLive
-    @GetMapping("/isLive")
+
+    /**
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     * @author Ankit
+     * @apiNote This api is for get live products
+     */
+    @GetMapping(ApiConstants.PROD_IS_LIVE)
     public ResponseEntity<PageableResponse<ProductDto>> getIsLiveProducts(
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
             @RequestParam(value = "pageSize", defaultValue = "5", required = false) Integer pageSize,
@@ -82,7 +131,18 @@ public class ProductController {
     }
 
     //search
-    @GetMapping("/search/{subTitle}")
+
+    /**
+     * @param subTitle
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     * @author Ankit
+     * @apiNote This api is for search product using keyword
+     */
+    @GetMapping(ApiConstants.PROD_SEARCH)
     public ResponseEntity<PageableResponse<ProductDto>> searchProducts(
             @PathVariable String subTitle,
             @RequestParam(value = "pageNumber", defaultValue = "0", required = false) Integer pageNumber,
@@ -94,6 +154,4 @@ public class ProductController {
         log.info("Completed request for get all product details having pageNumber:{},pageSize:{},sortBy:{},sortDir:{}", pageNumber, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(products, HttpStatus.FOUND);
     }
-
-
 }
