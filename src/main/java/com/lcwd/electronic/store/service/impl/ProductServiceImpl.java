@@ -11,6 +11,7 @@ import com.lcwd.electronic.store.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -27,6 +28,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ModelMapper mapper;
+
+    @Value("${product.profile.image.path}")
+    private String productImagePath;
 
     /**
      * @param productDto
@@ -64,6 +68,7 @@ public class ProductServiceImpl implements ProductService {
         product.setStock(productDto.getStock());
         product.setIsActive(productDto.getIsActive());
         product.setModifiedBy(productDto.getModifiedBy());
+        product.setProductImage(productDto.getProductImage());
         Product updatedProduct = this.productRepo.save(product);
         log.info("Completed dao call for update product details with id :{}", productId);
         return this.mapper.map(updatedProduct, ProductDto.class);

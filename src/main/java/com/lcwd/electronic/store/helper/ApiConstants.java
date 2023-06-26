@@ -20,6 +20,7 @@ public class ApiConstants {
     public static final String PROD_ID = "/{productId}";
     public static final String PROD_SEARCH = "/search/{subTitle}";
     public static final String PROD_IS_LIVE = "/isLive";
+    public static final String PROD_IMG = "/image/{productId}";
 
 
 }

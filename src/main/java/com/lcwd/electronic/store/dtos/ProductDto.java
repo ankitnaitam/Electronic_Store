@@ -34,4 +34,6 @@ public class ProductDto extends CustomFieldsDto {
     private Long quantity;
 
     private Boolean stock;
+
+    private String productImage;
 }

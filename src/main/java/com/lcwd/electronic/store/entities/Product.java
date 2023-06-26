@@ -35,4 +35,6 @@ public class Product extends CustomFields {
 
     private Boolean stock;
 
+    private String productImage;
+
 }
