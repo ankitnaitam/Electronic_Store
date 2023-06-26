@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @MappedSuperclass
 public class CustomFieldsDto {
 
-    private String isActive;
+    private Boolean isActive;
 
     private String createdBy;
 

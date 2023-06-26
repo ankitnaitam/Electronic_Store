@@ -19,7 +19,7 @@ import java.time.LocalDateTime;
 public class CustomFields {
 
     @Column(name = "is_active")
-    private String isActive;
+    private Boolean isActive;
 
     @CreatedBy
     @Column(name = "created_by")
