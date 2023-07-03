@@ -1,9 +1,12 @@
 package com.lcwd.electronic.store.dtos;
 
+import com.lcwd.electronic.store.entities.Product;
 import lombok.*;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 @Getter
@@ -23,4 +26,7 @@ public class CategoryDto extends CustomFieldsDto {
 
     @NotBlank
     private String coverImage;
+
+    private List<Product> products=new ArrayList<>();
+
 }

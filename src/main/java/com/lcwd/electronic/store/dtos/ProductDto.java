@@ -1,5 +1,6 @@
 package com.lcwd.electronic.store.dtos;
 
+import com.lcwd.electronic.store.entities.Category;
 import lombok.*;
 
 import javax.persistence.Column;
@@ -36,4 +37,6 @@ public class ProductDto extends CustomFieldsDto {
     private Boolean stock;
 
     private String productImage;
+
+    private Category category;
 }
