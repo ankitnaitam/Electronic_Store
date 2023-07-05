@@ -111,11 +111,9 @@ public class UserServiceTest {
 
         Mockito.when(userRepository.findById(userId)).thenReturn(Optional.of(user1));
 
-        System.out.println("Before :" + user1);
         userService.deleteUser(userId);
 
         Mockito.verify(userRepository, Mockito.times(1)).delete(user1);
-        System.out.println("After :" + user1);
     }
 
     @Test
