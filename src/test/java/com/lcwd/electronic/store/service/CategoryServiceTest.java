@@ -34,9 +34,9 @@ class CategoryServiceTest {
     @Autowired
     private ModelMapper mapper;
 
-    Category cat1;
-    Category cat2;
-    CategoryDto catDto1;
+    private Category cat1;
+    private Category cat2;
+    private CategoryDto catDto1;
 
     @BeforeEach
     public void init() {

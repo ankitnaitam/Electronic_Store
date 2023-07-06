@@ -31,10 +31,10 @@ public class UserServiceTest {
     @Autowired
     private ModelMapper mapper;
 
-    User user1;
-    User user2;
-    User user3;
-    UserDto userDto1;
+    private User user1;
+    private User user2;
+    private User user3;
+    private UserDto userDto1;
 
     @BeforeEach
     public void init() {
