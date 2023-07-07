@@ -68,7 +68,7 @@ public class UserController {
         log.info("Initiated request for update the User details with userId:{}", userId);
         UserDto updatedUser = this.userService.updateUser(userDto, userId);
         log.info("Completed request for update the User details with userId:{}", userId);
-        return new ResponseEntity<>(updatedUser, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedUser, HttpStatus.OK);
     }
 
     //delete
