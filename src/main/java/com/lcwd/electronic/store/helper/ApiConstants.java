@@ -6,7 +6,7 @@ public class ApiConstants {
     public static final String USER_BASE_URL = "/api/users/";
     public static final String USER_ID = "/{userId}";
     public static final String USER_EMAIL = "/email";
-    public static final String USER_KEYWORD = "/keyword";
+    public static final String USER_KEYWORD = "/keyword/{keyword}";
     public static final String USER_IMAGE = "/image/{userId}";
 
     //Category Api

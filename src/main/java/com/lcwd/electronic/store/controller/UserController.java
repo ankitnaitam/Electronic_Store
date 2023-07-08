@@ -129,7 +129,7 @@ public class UserController {
      * @apiNote This Api is to get single user data by email
      */
     @GetMapping(ApiConstants.USER_EMAIL)
-    public ResponseEntity<UserDto> getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<UserDto> getUserByEmail(@RequestParam String email) {
         log.info("Initiated request to get User by email:{}", email);
         return new ResponseEntity<>(this.userService.getUserByEmail(email), HttpStatus.FOUND);
     }

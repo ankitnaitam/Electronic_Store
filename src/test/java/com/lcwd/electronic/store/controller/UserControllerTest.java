@@ -1,8 +1,12 @@
 package com.lcwd.electronic.store.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.lcwd.electronic.store.dtos.ImageResponse;
+import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.entities.User;
+import com.lcwd.electronic.store.helper.AppConstants;
+import com.lcwd.electronic.store.service.FileService;
 import com.lcwd.electronic.store.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,14 +16,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.multipart.MultipartFile;
 
-import static org.junit.jupiter.api.Assertions.*;
+import java.io.IOException;
+import java.util.Arrays;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -33,6 +39,9 @@ class UserControllerTest {
 
     @Autowired
     private ModelMapper mapper;
+
+    @MockBean
+    private FileService fileService;
 
     private User user1;
     private User user2;
@@ -99,27 +108,96 @@ class UserControllerTest {
     }
 
     @Test
-    void deleteUserTest() {
+    void deleteUserTest() throws Exception {
+        String userId = "12kkd3";
+        //Mocking userService.deleteUser(userId) method
+        Mockito.doNothing().when(userService).deleteUser(userId);
+        //Perform delete request
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.delete("/api/users/" + userId))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.content().string(AppConstants.USER_DELETED + userId));
+        //verify
+        Mockito.verify(userService).deleteUser(userId);
     }
 
     @Test
-    void getAllUserTest() {
+    void getAllUserTest() throws Exception {
+        UserDto dto1 = mapper.map(user1, UserDto.class);
+        UserDto dto2 = mapper.map(user2, UserDto.class);
+        UserDto dto3 = mapper.map(user3, UserDto.class);
+
+        PageableResponse<UserDto> pageableResponse = new PageableResponse<>();
+        pageableResponse.setContent(Arrays.asList(dto1, dto2, dto3));
+
+        Mockito.when(userService.getAllUser(Mockito.anyInt(), Mockito.anyInt(), Mockito.anyString(), Mockito.anyString())).thenReturn(pageableResponse);
+
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/users/")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isFound());
     }
 
     @Test
-    void getUserByIdTest() {
+    void getUserByIdTest() throws Exception {
+        String userId = "23jdmek";
+        Mockito.when(userService.getUserById(userId)).thenReturn(mapper.map(user2, UserDto.class));
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/users/" + userId)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isFound());
     }
 
     @Test
-    void getUserByEmailTest() {
+    void getUserByEmailTest() throws Exception {
+        String email = "rahulsharma23@gmail.com";
+        Mockito.when(userService.getUserByEmail(email)).thenReturn(mapper.map(user3, UserDto.class));
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/users/email" + email)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isFound());
     }
 
     @Test
-    void searchUserTest() {
+    void searchUserTest() throws Exception {
+        String keyword = "rahul";
+        UserDto dto1 = mapper.map(user1, UserDto.class);
+        UserDto dto2 = mapper.map(user2, UserDto.class);
+        UserDto dto3 = mapper.map(user3, UserDto.class);
+
+        Mockito.when(userService.searchUser(keyword)).thenReturn(Arrays.asList(dto1, dto2, dto3));
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.get("/api/users/keyword/" + keyword)
+                                .accept(MediaType.APPLICATION_JSON))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isFound());
     }
 
     @Test
-    void uploadUserImage() {
+    void uploadUserImage() throws Exception {
+        MultipartFile imageFile = Mockito.any();
+        String imageUploadPath = "images/users/";
+
+        ImageResponse imageResponse = new ImageResponse();
+        imageResponse.setImageName("abc.jpg");
+        imageResponse.setMessage("uploded");
+        imageResponse.setSuccess(true);
+        imageResponse.setStatus(HttpStatus.CREATED);
+
+        Mockito.when(fileService.uploadFile(Mockito.any(), Mockito.anyString())).thenReturn(String.valueOf(imageResponse));
+        Mockito.when(userService.getUserById(Mockito.anyString())).thenReturn(mapper.map(user1, UserDto.class));
+        Mockito.when(userService.updateUser(Mockito.any(), Mockito.anyString())).thenReturn(mapper.map(user1, UserDto.class));
+
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.post("/api/users/image/" + user1.getUserId()))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isCreated())
+                .andExpect(MockMvcResultMatchers.content().string(AppConstants.IMAGE_UPLOADED + user1.getUserId()));
     }
 
     @Test
