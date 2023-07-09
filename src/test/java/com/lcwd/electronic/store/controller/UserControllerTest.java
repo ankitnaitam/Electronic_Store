@@ -24,7 +24,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 @SpringBootTest
@@ -76,7 +75,7 @@ class UserControllerTest {
     }
 
     @Test
-    void createUserTest() throws Exception {
+    public void createUserTest() throws Exception {
         // "/api/users"+Post+data as Json
         // data as Json + status
         Mockito.when(userService.createUser(Mockito.any())).thenReturn(mapper.map(user1, UserDto.class));
@@ -182,6 +181,7 @@ class UserControllerTest {
     void uploadUserImage() throws Exception {
         MultipartFile imageFile = Mockito.any();
         String imageUploadPath = "images/users/";
+        String userId="tret234";
 
         ImageResponse imageResponse = new ImageResponse();
         imageResponse.setImageName("abc.jpg");
@@ -190,7 +190,7 @@ class UserControllerTest {
         imageResponse.setStatus(HttpStatus.CREATED);
 
         Mockito.when(fileService.uploadFile(Mockito.any(), Mockito.anyString())).thenReturn(String.valueOf(imageResponse));
-        Mockito.when(userService.getUserById(Mockito.anyString())).thenReturn(mapper.map(user1, UserDto.class));
+        Mockito.when(userService.getUserById(userId)).thenReturn(mapper.map(user1, UserDto.class));
         Mockito.when(userService.updateUser(Mockito.any(), Mockito.anyString())).thenReturn(mapper.map(user1, UserDto.class));
 
         this.mockMvc.perform(

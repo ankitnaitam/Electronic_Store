@@ -67,7 +67,7 @@ public class CategoryController {
         log.info("Initialized request for update category data having id:{}", categoryId);
         CategoryDto updatedCategory = this.categoryService.updateCategory(categoryDto, categoryId);
         log.info("Completed request for update category data having id:{}", categoryId);
-        return new ResponseEntity<>(updatedCategory, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedCategory, HttpStatus.OK);
     }
 
     //delete
