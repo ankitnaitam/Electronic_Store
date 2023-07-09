@@ -16,6 +16,7 @@ public class AppConstants {
     public static final String USER_DELETED = "User deleted successfully with user_id :";
     //category
     public static final String CATE_DELETED="Category deleted successfully with category_id :";
+    public static final String PROD_DELETED="Product deleted successfully with product_id :";
 
     //fileServiceImpl
     public static final String FILE_NOT_ALLOWED = "File not allowed with extension :";

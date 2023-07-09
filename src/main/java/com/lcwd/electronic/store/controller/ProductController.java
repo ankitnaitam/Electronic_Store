@@ -67,7 +67,7 @@ public class ProductController {
         log.info("Initiated request for update product details with id :{}", productId);
         ProductDto updatedProduct = this.productService.updateProduct(productDto, productId);
         log.info("Completed request for update product details with id:{}", productId);
-        return new ResponseEntity<>(updatedProduct, HttpStatus.CREATED);
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
     }
 
     //delete
@@ -83,7 +83,7 @@ public class ProductController {
         log.info("Initiated request for delete product with id:{}", productId);
         this.productService.deleteProduct(productId);
         log.info("Completed request for delete product with id:{}", productId);
-        return new ResponseEntity<>("Product details deleted successfully !!", HttpStatus.OK);
+        return new ResponseEntity<>(AppConstants.PROD_DELETED + productId, HttpStatus.OK);
     }
 
     //get single
