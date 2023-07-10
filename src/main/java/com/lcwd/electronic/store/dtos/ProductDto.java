@@ -38,5 +38,5 @@ public class ProductDto extends CustomFieldsDto {
 
     private String productImage;
 
-    private Category category;
+    private CategoryDto category;
 }

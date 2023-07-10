@@ -212,4 +212,20 @@ public class ProductController {
         StreamUtils.copy(resource, response.getOutputStream());
         log.info("Initiated request for serve product image with id :{}", productId);
     }
+    /**
+     * @param productDto
+     * @param categoryId
+     * @return
+     * @author Ankit
+     * @apiNote This api is for save product details with category
+     * Also we can write this createWithCategory api inside CategoryController
+     * just we need to change url
+     */
+    @PostMapping(ApiConstants.PROD_WITH_CAT)
+    public ResponseEntity<ProductDto> createWithCategory(@Valid @RequestBody ProductDto productDto, @PathVariable String categoryId) {
+        log.info("Initiated request for save product details with category having categoryId :{}", categoryId);
+        ProductDto newProduct = this.productService.createWithCategory(productDto, categoryId);
+        log.info("Completed request for save product details with category having categoryId :{}", categoryId);
+        return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
+    }
 }

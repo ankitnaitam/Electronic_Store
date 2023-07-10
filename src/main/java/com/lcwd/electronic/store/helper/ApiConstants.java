@@ -21,6 +21,6 @@ public class ApiConstants {
     public static final String PROD_SEARCH = "/search/{subTitle}";
     public static final String PROD_IS_LIVE = "/isLive";
     public static final String PROD_IMG = "/image/{productId}";
-
+    public static final String PROD_WITH_CAT = "/category/{categoryId}/products";
 
 }

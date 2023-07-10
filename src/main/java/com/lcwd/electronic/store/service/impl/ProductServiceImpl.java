@@ -2,10 +2,12 @@ package com.lcwd.electronic.store.service.impl;
 
 import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.ProductDto;
+import com.lcwd.electronic.store.entities.Category;
 import com.lcwd.electronic.store.entities.Product;
 import com.lcwd.electronic.store.exceptions.ResourceNotFoundException;
 import com.lcwd.electronic.store.helper.AppConstants;
 import com.lcwd.electronic.store.helper.PageResponseHelper;
+import com.lcwd.electronic.store.repositories.CategoryRepository;
 import com.lcwd.electronic.store.repositories.ProductRepository;
 import com.lcwd.electronic.store.service.ProductService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,6 +27,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private ProductRepository productRepo;
+
+    @Autowired
+    private CategoryRepository categoryRepository;
 
     @Autowired
     private ModelMapper mapper;
@@ -161,5 +166,27 @@ public class ProductServiceImpl implements ProductService {
         PageableResponse<ProductDto> response = PageResponseHelper.getPageableResponse(productPage, ProductDto.class);
         log.info("Completed dao call for search product details having subTitle :{},pageNumber :{},pageSize :{},sortBy :{},sortDir :{}", subTitle, pageNumber, pageSize, sortBy, sortDir);
         return response;
+    }
+
+    /**
+     * @param productDto
+     * @param categoryId
+     * @return
+     * @author Ankit
+     * @implNote This implementation is for save product with category
+     */
+    @Override
+    public ProductDto createWithCategory(ProductDto productDto, String categoryId) {
+        log.info("Initialized dao call for save product details with categoryId :{}", categoryId);
+        //fetch the category from db
+        Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CATE_NOT_FOUND + categoryId));
+        //product
+        String id = UUID.randomUUID().toString();
+        productDto.setProductId(id);
+        Product product = this.mapper.map(productDto, Product.class);
+        product.setCategory(category);
+        Product savedProduct = this.productRepo.save(product);
+        log.info("Completed dao call for save product details with categoryId :{}", categoryId);
+        return this.mapper.map(savedProduct, ProductDto.class);
     }
 }

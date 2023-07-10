@@ -26,7 +26,4 @@ public class CategoryDto extends CustomFieldsDto {
 
     @NotBlank
     private String coverImage;
-
-    private List<Product> products=new ArrayList<>();
-
 }
