@@ -212,6 +212,7 @@ public class ProductController {
         StreamUtils.copy(resource, response.getOutputStream());
         log.info("Initiated request for serve product image with id :{}", productId);
     }
+
     /**
      * @param productDto
      * @param categoryId
@@ -227,5 +228,20 @@ public class ProductController {
         ProductDto newProduct = this.productService.createWithCategory(productDto, categoryId);
         log.info("Completed request for save product details with category having categoryId :{}", categoryId);
         return new ResponseEntity<>(newProduct, HttpStatus.CREATED);
+    }
+
+    /**
+     * @param categoryId
+     * @param productId
+     * @return
+     * @author Ankit
+     * @apiNote This api is to assign category to product
+     */
+    @PutMapping(ApiConstants.ASSIGN_CAT)
+    public ResponseEntity<ProductDto> assignCategoryToProduct(@PathVariable String categoryId, @PathVariable String productId) {
+        log.info("Initialized request to assign category with categoryId :{} to existing product with productId :{}", categoryId, productId);
+        ProductDto updatedProduct = this.productService.assignCategoryToProduct(categoryId, productId);
+        log.info("Completed request to assign category with categoryId :{} to existing product with productId :{}", categoryId, productId);
+        return new ResponseEntity<>(updatedProduct, HttpStatus.CREATED);
     }
 }

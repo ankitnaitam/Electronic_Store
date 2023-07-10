@@ -189,4 +189,25 @@ public class ProductServiceImpl implements ProductService {
         log.info("Completed dao call for save product details with categoryId :{}", categoryId);
         return this.mapper.map(savedProduct, ProductDto.class);
     }
+
+    /**
+     * @param productId
+     * @param categoryId
+     * @return
+     * @author Ankit
+     * @implNote This implementation is to assign category to product
+     */
+    @Override // In which order we fetch object(category,product) from db as below in same order we have to provide arguments otherwise it will throw RNFE as not found with catId: prodId
+    public ProductDto assignCategoryToProduct(String categoryId, String productId) {
+        log.info("Initialized dao call to assign category with categoryId :{} to existing product with productId :{}", categoryId, productId);
+        //fetch category form db
+        Category category = this.categoryRepository.findById(categoryId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CATE_NOT_FOUND + categoryId));
+        //fetch product from dbA
+        Product product = this.productRepo.findById(productId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.PROD_NOT_FOUND + productId));
+        //assign category to existing product
+        product.setCategory(category);
+        Product savedProduct = this.productRepo.save(product);
+        log.info("Completed dao call to assign category with categoryId :{} to existing product with productId :{}", categoryId, productId);
+        return this.mapper.map(savedProduct, ProductDto.class);
+    }
 }
