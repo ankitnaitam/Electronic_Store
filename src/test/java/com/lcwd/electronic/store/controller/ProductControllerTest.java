@@ -168,6 +168,21 @@ class ProductControllerTest {
     }
 
     @Test
+    void assignCategoryToProductTest() throws Exception {
+        String catId = "eirjdie33";
+        String prodId = "iekdmdke678";
+
+        Mockito.when(productService.assignCategoryToProduct(catId, prodId)).thenReturn(mapper.map(prod2, ProductDto.class));
+        this.mockMvc.perform(
+                        MockMvcRequestBuilders.put("/api/products/category/{categoryId}/product/" + catId, prodId)
+                                .accept(MediaType.APPLICATION_JSON)
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(convertObjectToJsonString(prod2)))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isCreated());
+    }
+
+    @Test
     void uploadProductImageTest() {
     }
 

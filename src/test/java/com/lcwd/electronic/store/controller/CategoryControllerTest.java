@@ -63,7 +63,6 @@ class CategoryControllerTest {
                 .title("TitleDto 1")
                 .description("DescDto 1")
                 .coverImage("catDto1.jpg")
-                .products(List.of())
                 .build();
     }
 

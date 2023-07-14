@@ -13,6 +13,7 @@ import javax.validation.constraints.Size;
 @Getter
 @NoArgsConstructor(force = true)
 @AllArgsConstructor
+@ToString
 @Builder
 public class ProductDto extends CustomFieldsDto {
 
