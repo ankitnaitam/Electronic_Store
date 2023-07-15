@@ -183,6 +183,10 @@ class ProductControllerTest {
     }
 
     @Test
+    void createWithCategoryTest(){
+    }
+
+    @Test
     void uploadProductImageTest() {
     }
 

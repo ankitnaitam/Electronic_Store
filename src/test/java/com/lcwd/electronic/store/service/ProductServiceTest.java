@@ -147,7 +147,7 @@ class ProductServiceTest {
                 .coverImage("cat1.jpg")
                 .build();
 
-        Mockito.when(categoryRepository.findById(cat1.getCategoryId())).thenReturn(Optional.of(cat1));
+        .        Mockito.when(categoryRepository.findById(cat1.getCategoryId())).thenReturn(Optional.of(cat1));
         Mockito.when(productRepository.save(Mockito.any())).thenReturn(prod1);
 
         ProductDto productDto = productService.createWithCategory(mapper.map(prod1, ProductDto.class), cat1.getCategoryId());
