@@ -75,7 +75,7 @@ public class CartServiceImpl implements CartService {
             if (item.getProduct().getProductId().equals(productId)) {
                 //items already present in cart
                 item.setQuantity(quantity);
-                item.setTotalPrice((int) (quantity * product.getPrice()));
+                item.setTotalPrice((int) (quantity * product.getDiscountedPrice()));
                 updated.set(true);
             }
             return item;
@@ -87,7 +87,7 @@ public class CartServiceImpl implements CartService {
         if (!updated.get()) {
             CartItem cartItem = CartItem.builder()
                     .quantity(quantity)
-                    .totalPrice((int) (quantity * product.getPrice()))
+                    .totalPrice((int) (quantity * product.getDiscountedPrice()))
                     .cart(cart)
                     .product(product)
                     .build();
@@ -112,6 +112,7 @@ public class CartServiceImpl implements CartService {
         //fetch cart using fetched user
         Cart cart = this.cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + userId));
         cart.getItems().clear();
+        System.out.println(cart.getItems());
         this.cartRepository.save(cart);
     }
 

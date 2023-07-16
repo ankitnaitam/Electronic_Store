@@ -9,7 +9,6 @@ import com.lcwd.electronic.store.repositories.ProductRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +19,6 @@ import org.springframework.data.domain.*;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class ProductServiceTest {
@@ -49,7 +46,7 @@ class ProductServiceTest {
                 .productTitle("Prod 1")
                 .productDescription("This is prod 1")
                 .price(2333.12)
-                .discountPrice(986.23)
+                .discountedPrice(986.23)
                 .quantity(235L)
                 .stock(true)
                 .productImage("prod1.jpg")
@@ -60,7 +57,7 @@ class ProductServiceTest {
                 .productTitle("Prod 2")
                 .productDescription("This is prod 2")
                 .price(8958.12)
-                .discountPrice(586.23)
+                .discountedPrice(586.23)
                 .quantity(295L)
                 .stock(true)
                 .productImage("prod2.jpg")
@@ -124,7 +121,7 @@ class ProductServiceTest {
                 .productTitle("Prod 3")
                 .productDescription("This is prod 3")
                 .price(45658.12)
-                .discountPrice(8996.23)
+                .discountedPrice(8996.23)
                 .quantity(985L)
                 .stock(true)
                 .productImage("prod3.jpg")

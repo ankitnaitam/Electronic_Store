@@ -22,6 +22,11 @@ public class Cart {
     @OneToOne
     private User user;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    //while fetching cart items if we get duplicates item, to solve these issue we can use Set interface(will get efficiency but get problem while removing order) or we can remove FetchType.EAGER
+    //we r most likely getting duplicates bz when using FetchType.EAGER, Hibernate uses an outer join to fetch the data in join table
     private List<CartItem> items = new ArrayList<>();
+    //orphanRemoval will clear cart from db also
+    //its usage is to delete orphaned entities from the database.
+    // An entity that is no longer attached to its parent is the definition of being an orphan.
 }

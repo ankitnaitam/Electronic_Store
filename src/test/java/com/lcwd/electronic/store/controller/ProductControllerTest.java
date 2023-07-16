@@ -3,13 +3,11 @@ package com.lcwd.electronic.store.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.lcwd.electronic.store.dtos.PageableResponse;
 import com.lcwd.electronic.store.dtos.ProductDto;
-import com.lcwd.electronic.store.dtos.UserDto;
 import com.lcwd.electronic.store.entities.Product;
 import com.lcwd.electronic.store.helper.AppConstants;
 import com.lcwd.electronic.store.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +21,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.Arrays;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -50,7 +46,7 @@ class ProductControllerTest {
                 .productTitle("Prod")
                 .productDescription("This is prod 1")
                 .price(2333.12)
-                .discountPrice(986.23)
+                .discountedPrice(986.23)
                 .quantity(235L)
                 .stock(true)
                 .productImage("prod1.jpg")
@@ -61,7 +57,7 @@ class ProductControllerTest {
                 .productTitle("Prod 2")
                 .productDescription("This is prod 2")
                 .price(8958.12)
-                .discountPrice(586.23)
+                .discountedPrice(586.23)
                 .quantity(295L)
                 .stock(true)
                 .productImage("prod2.jpg")

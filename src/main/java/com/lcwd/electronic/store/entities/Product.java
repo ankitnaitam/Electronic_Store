@@ -26,7 +26,7 @@ public class Product extends CustomFields {
     private Double price;
 
     @Column(name = "discount_price")
-    private Double discountPrice;
+    private Double discountedPrice;
 
     private Long quantity;
 
