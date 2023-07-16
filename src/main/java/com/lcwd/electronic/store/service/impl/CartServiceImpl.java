@@ -14,6 +14,7 @@ import com.lcwd.electronic.store.repositories.CartRepository;
 import com.lcwd.electronic.store.repositories.ProductRepository;
 import com.lcwd.electronic.store.repositories.UserRepository;
 import com.lcwd.electronic.store.service.CartService;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,6 +27,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
+@Slf4j
 public class CartServiceImpl implements CartService {
 
     @Autowired
@@ -43,8 +45,16 @@ public class CartServiceImpl implements CartService {
     @Autowired
     private ModelMapper mapper;
 
+    /**
+     * @param userId
+     * @param request
+     * @return
+     * @author Ankit
+     * @implNote This implementation is for add items to cart
+     */
     @Override
     public CartDto addItemsToCart(String userId, AddItemToCartRequest request) {
+        log.info("Initiated dao call for add cart-items to cart of user :{}", userId);
 
         String productId = request.getProductId();
         Integer quantity = request.getQuantity();
@@ -61,8 +71,10 @@ public class CartServiceImpl implements CartService {
         //get cart if exist or create new
         Cart cart = null;
         try {
+            log.info("Fetched existing cart of user:{}", userId);
             cart = cartRepository.findByUser(user).get();
         } catch (NoSuchElementException e) {
+            log.info("Created new cart of user:{}", userId);
             cart = new Cart();
             cart.setCartId(UUID.randomUUID().toString());
             cart.setCreatedAt(new Date());
@@ -74,6 +86,7 @@ public class CartServiceImpl implements CartService {
         List<CartItem> updatedItems = items.stream().map(item -> {
             if (item.getProduct().getProductId().equals(productId)) {
                 //items already present in cart
+                log.info("Updating item details of product:{}", productId);
                 item.setQuantity(quantity);
                 item.setTotalPrice((int) (quantity * product.getDiscountedPrice()));
                 updated.set(true);
@@ -85,6 +98,7 @@ public class CartServiceImpl implements CartService {
 
         //create items
         if (!updated.get()) {
+            log.info("Adding item details to cart");
             CartItem cartItem = CartItem.builder()
                     .quantity(quantity)
                     .totalPrice((int) (quantity * product.getDiscountedPrice()))
@@ -96,30 +110,53 @@ public class CartServiceImpl implements CartService {
 
         cart.setUser(user);
         Cart savedCart = this.cartRepository.save(cart);
+        log.info("Completed dao call for add cart-items to cart of user :{}", userId);
         return this.mapper.map(savedCart, CartDto.class);
     }
 
+    /**
+     * @param cartItemId
+     * @author Ankit
+     * @implNote This implementation is for remove item from cart
+     */
     @Override
     public void removeItemFromCart(Integer cartItemId) {
+        log.info("Initiated dao call for remove cart-item from cart having cartItemId :{}", cartItemId);
         CartItem cartItem = this.cartItemRepository.findById(cartItemId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_ITEM_NOT_FOUND + cartItemId));
+        log.info("Completed dao call for remove cart-item from cart having cartItemId :{}", cartItemId);
         this.cartItemRepository.delete(cartItem);
     }
 
+    /**
+     * @param userId
+     * @author Ankit
+     * @implNote This implementation is for clear cart
+     */
     @Override
     public void clearCart(String userId) {
+        log.info("Initiated dao call for clear cart of user :{}", userId);
         //fetch user using userId
         User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
         //fetch cart using fetched user
         Cart cart = this.cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + userId));
         cart.getItems().clear();
         System.out.println(cart.getItems());
+        log.info("Completed dao call for clear cart of user :{}", userId);
         this.cartRepository.save(cart);
     }
 
+    /**
+     * @param userId
+     * @return
+     * @author Ankit
+     * @implNote This implementation is to get cart details of user
+     */
     @Override
     public CartDto getCartByUser(String userId) {
+        log.info("Initiated dao call for get cart of user:{}", userId);
         User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
         Cart cart = this.cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + userId));
+        log.info("Completed dao call for get cart of user:{}", userId);
         return this.mapper.map(cart, CartDto.class);
     }
 }
