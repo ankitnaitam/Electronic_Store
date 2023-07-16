@@ -6,8 +6,10 @@ import com.lcwd.electronic.store.entities.Cart;
 import com.lcwd.electronic.store.entities.CartItem;
 import com.lcwd.electronic.store.entities.Product;
 import com.lcwd.electronic.store.entities.User;
+import com.lcwd.electronic.store.exceptions.BadApiRequestException;
 import com.lcwd.electronic.store.exceptions.ResourceNotFoundException;
 import com.lcwd.electronic.store.helper.AppConstants;
+import com.lcwd.electronic.store.repositories.CartItemRepository;
 import com.lcwd.electronic.store.repositories.CartRepository;
 import com.lcwd.electronic.store.repositories.ProductRepository;
 import com.lcwd.electronic.store.repositories.UserRepository;
@@ -36,6 +38,9 @@ public class CartServiceImpl implements CartService {
     private CartRepository cartRepository;
 
     @Autowired
+    private CartItemRepository cartItemRepository;
+
+    @Autowired
     private ModelMapper mapper;
 
     @Override
@@ -43,6 +48,10 @@ public class CartServiceImpl implements CartService {
 
         String productId = request.getProductId();
         Integer quantity = request.getQuantity();
+
+        if (quantity <= 0) {
+            throw new BadApiRequestException(AppConstants.QUANTITY_NOT_VALID);
+        }
 
         //fetch the user from db
         User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
@@ -91,12 +100,25 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public void removeItemFromCart(String userId, Integer cartItemId) {
-
+    public void removeItemFromCart(Integer cartItemId) {
+        CartItem cartItem = this.cartItemRepository.findById(cartItemId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_ITEM_NOT_FOUND + cartItemId));
+        this.cartItemRepository.delete(cartItem);
     }
 
     @Override
-    public void clearCart(String usetId) {
+    public void clearCart(String userId) {
+        //fetch user using userId
+        User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
+        //fetch cart using fetched user
+        Cart cart = this.cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + userId));
+        cart.getItems().clear();
+        this.cartRepository.save(cart);
+    }
 
+    @Override
+    public CartDto getCartByUser(String userId) {
+        User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
+        Cart cart = this.cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + userId));
+        return this.mapper.map(cart, CartDto.class);
     }
 }

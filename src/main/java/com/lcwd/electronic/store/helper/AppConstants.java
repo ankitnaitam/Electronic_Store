@@ -10,13 +10,13 @@ public class AppConstants {
 
     public static final String CATE_NOT_FOUND = "Category not found with category_id :";
 
-    public static final String PROD_NOT_FOUND="Product not found with product_id :";
+    public static final String PROD_NOT_FOUND = "Product not found with product_id :";
 
     //user
     public static final String USER_DELETED = "User deleted successfully with user_id :";
     //category
-    public static final String CATE_DELETED="Category deleted successfully with category_id :";
-    public static final String PROD_DELETED="Product deleted successfully with product_id :";
+    public static final String CATE_DELETED = "Category deleted successfully with category_id :";
+    public static final String PROD_DELETED = "Product deleted successfully with product_id :";
 
     //fileServiceImpl
     public static final String FILE_NOT_ALLOWED = "File not allowed with extension :";
@@ -27,6 +27,11 @@ public class AppConstants {
     public static final String PAGE_SIZE = "5";
     public static final String SORT_BY = "name";
     public static final String SORT_DIR = "asc";
-    public static final String CATE_SORT_BY="title";
+    public static final String CATE_SORT_BY = "title";
+
+    //cart
+    public static final String CART_ITEM_NOT_FOUND = "Cart item not found with cartItemId :";
+    public static final String CART_NOT_FOUND = "Cart not found of user :";
+    public static final String QUANTITY_NOT_VALID = "Requested quantity not valid !!";
 
 }
