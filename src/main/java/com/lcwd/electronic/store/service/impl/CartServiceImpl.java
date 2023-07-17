@@ -141,8 +141,8 @@ public class CartServiceImpl implements CartService {
         Cart cart = this.cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + userId));
         cart.getItems().clear();
         System.out.println(cart.getItems());
-        log.info("Completed dao call for clear cart of user :{}", userId);
         this.cartRepository.save(cart);
+        log.info("Completed dao call for clear cart of user :{}", userId);
     }
 
     /**

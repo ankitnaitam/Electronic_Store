@@ -24,4 +24,7 @@ public class ApiConstants {
     public static final String PROD_WITH_CAT = "/category/{categoryId}/products";
     public static final String ASSIGN_CAT = "/category/{categoryId}/product/{productId}";
 
+    //Cart Api
+    public static final String CART_BASE_URL = "/api/cart/";
+    public static final String CART_ITEM_ID = "/item/{cartItemId}";
 }
