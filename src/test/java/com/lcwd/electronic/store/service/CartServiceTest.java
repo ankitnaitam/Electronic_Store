@@ -46,8 +46,6 @@ class CartServiceTest {
     @MockBean
     private CartItemRepository cartItemRepository;
 
-    private AddItemToCartRequest request;
-
     private User user1;
 
     private Product prod1;

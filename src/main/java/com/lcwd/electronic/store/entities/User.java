@@ -3,6 +3,7 @@ package com.lcwd.electronic.store.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @NoArgsConstructor
@@ -32,5 +33,8 @@ public class User extends CustomFields {
 
     @Column(name = "user_image")
     private String imageName;
+
+    @OneToMany
+    private List<Order> order;
 
 }
