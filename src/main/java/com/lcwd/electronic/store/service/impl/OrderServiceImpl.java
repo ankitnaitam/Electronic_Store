@@ -57,7 +57,7 @@ public class OrderServiceImpl implements OrderService {
             throw new BadApiRequestException("Invalid numbers of items in cart !!");
         }
 
-        Order.builder()
+        Order order = Order.builder()
                 .billingName(orderRequest.getBillingName())
                 .billingPhone(orderRequest.getBillingPhone())
                 .billingAddress(orderRequest.getBillingAddress())
@@ -73,17 +73,17 @@ public class OrderServiceImpl implements OrderService {
                     .product((cartItem.getProduct()))
                     .totalPrice(cartItem.getTotalPrice())
                     .build();
-            order.setOrderAmount(orderAmount.get() + orderItem.getTotalPrice());
+            this.order.setOrderAmount(orderAmount.get() + orderItem.getTotalPrice());
             return orderItem;
         }).collect(Collectors.toList());
 
-        order.setOrderItems(orderItems);
-        order.setOrderAmount(orderAmount.get());
+        this.order.setOrderItems(orderItems);
+        this.order.setOrderAmount(orderAmount.get());
 
         cart.getItems().clear();
         cartRepository.save(cart);
 
-        Order savedOrder = orderRepository.save(order);
+        Order savedOrder = orderRepository.save(this.order);
         return this.mapper.map(savedOrder, OrderDto.class);
     }
 
