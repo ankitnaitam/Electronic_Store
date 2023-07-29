@@ -25,7 +25,7 @@ public class Order {
     private Integer orderAmount;
     @Column(length = 100)
     private String billingAddress;
-    private String billingPhoneNo;
+    private String billingPhone;
     private String billingName;
     private Date orderDate;
     private Date deliverdDate;

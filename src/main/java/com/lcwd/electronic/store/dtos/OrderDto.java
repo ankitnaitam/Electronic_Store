@@ -18,7 +18,7 @@ public class OrderDto {
     private String paymentStatus="NOT_PAID";
     private Integer orderAmount;
     private String billingAddress;
-    private String billingPhoneNo;
+    private String billingPhone;
     private String billingName;
     private Date orderDate=new Date();
     private Date deliverdDate;

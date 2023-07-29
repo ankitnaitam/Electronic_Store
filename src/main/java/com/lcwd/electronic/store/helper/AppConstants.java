@@ -34,4 +34,7 @@ public class AppConstants {
     public static final String CART_NOT_FOUND = "Cart not found of user :";
     public static final String QUANTITY_NOT_VALID = "Requested quantity not valid !!";
 
+    //Order
+    public static final String ORDER_NOT_FOUND = "Order not found with order_id :";
+
 }
