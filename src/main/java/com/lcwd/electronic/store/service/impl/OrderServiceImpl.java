@@ -44,12 +44,21 @@ public class OrderServiceImpl implements OrderService {
 
     private Order order;
 
+    /**
+     * @param orderRequest
+     * @return
+     * @author Ankit
+     * @implNote This implementation is for create order
+     */
     @Override
     public OrderDto createOrder(CreateOrderRequest orderRequest) {
+        log.info("Initiated dao call for save order of user :{}", orderRequest.getUserId());
         String userId = orderRequest.getUserId();
         String cartId = orderRequest.getCartId();
 
+        log.info("Request to find user with userId :{}", userId);
         User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
+        log.info("Request to find cart with cartId :{}", cartId);
         Cart cart = this.cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + cartId));
 
         List<CartItem> cartItems = cart.getItems();
@@ -84,28 +93,55 @@ public class OrderServiceImpl implements OrderService {
         cartRepository.save(cart);
 
         Order savedOrder = orderRepository.save(this.order);
+        log.info("Completed dao call for save order of user :{}", orderRequest.getUserId());
         return this.mapper.map(savedOrder, OrderDto.class);
     }
 
+    /**
+     * @param orderId
+     * @author Ankit
+     * @implNote This implementation is for remove order from cart
+     */
     @Override
     public void removeOrder(String orderId) {
+        log.info("Initiated dao call for remove order with orderId :{}", orderId);
         Order order1 = this.orderRepository.findById(orderId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.ORDER_NOT_FOUND + orderId));
+        log.info("Completed dao call for remove order with orderId :{}", orderId);
         this.orderRepository.delete(order1);
     }
 
+    /**
+     * @param userId
+     * @return
+     * @author Ankit
+     * @implNote This implementation is for get orders of user
+     */
     @Override
     public List<OrderDto> getOrdersOfUser(String userId) {
+        log.info("Initiated dao call to get orders of user :{}", userId);
         User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND));
         List<Order> orders = this.orderRepository.findByUser(user);
         List<OrderDto> orderDtos = orders.stream().map(order -> this.mapper.map(order, OrderDto.class)).collect(Collectors.toList());
+        log.info("Initiated dao call to get orders with user :{}", userId);
         return orderDtos;
     }
 
+    /**
+     * @param pageNumber
+     * @param pageSize
+     * @param sortBy
+     * @param sortDir
+     * @return
+     * @author Ankit
+     * @implNote This implementation is for get orders
+     */
     @Override
     public PageableResponse<OrderDto> getOrders(Integer pageNumber, Integer pageSize, String sortBy, String sortDir) {
+        log.info("Initiated dao call to get orders having pageNumber :{},pageSize :{},sortBy :{},sortDir :{}", pageNumber, pageSize, sortBy, sortDir);
         Sort sort = (sortDir.equalsIgnoreCase("desc")) ? Sort.by(sortBy).descending() : Sort.by(sortBy).ascending();
         Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Order> orders = this.orderRepository.findAll(pageable);
+        log.info("Completed dao call to get orders having pageNumber :{},pageSize :{},sortBy :{},sortDir :{}", pageNumber, pageSize, sortBy, sortDir);
         return PageResponseHelper.getPageableResponse(orders, OrderDto.class);
     }
 }
