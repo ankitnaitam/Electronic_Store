@@ -23,6 +23,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
+import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -70,6 +72,8 @@ public class OrderServiceImpl implements OrderService {
                 .billingName(orderRequest.getBillingName())
                 .billingPhone(orderRequest.getBillingPhone())
                 .billingAddress(orderRequest.getBillingAddress())
+                .orderStatus(orderRequest.getOrderStatus())
+                .paymentStatus(orderRequest.getPaymentStatus())
                 .orderDate(new Date())
                 .build();
 
@@ -82,17 +86,20 @@ public class OrderServiceImpl implements OrderService {
                     .product((cartItem.getProduct()))
                     .totalPrice(cartItem.getTotalPrice())
                     .build();
-            this.order.setOrderAmount(orderAmount.get() + orderItem.getTotalPrice());
+            order.setOrderAmount(orderAmount.get() + orderItem.getTotalPrice());
             return orderItem;
         }).collect(Collectors.toList());
 
-        this.order.setOrderItems(orderItems);
-        this.order.setOrderAmount(orderAmount.get());
+        order.setOrderItems(orderItems);
+        order.setOrderAmount(orderAmount.get());
 
         cart.getItems().clear();
         cartRepository.save(cart);
 
-        Order savedOrder = orderRepository.save(this.order);
+        order.setUser(user);
+
+        order.setOrderId(UUID.randomUUID().toString());
+        Order savedOrder = orderRepository.save(order);
         log.info("Completed dao call for save order of user :{}", orderRequest.getUserId());
         return this.mapper.map(savedOrder, OrderDto.class);
     }

@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/order/")
+@RequestMapping(ApiConstants.ORDER_BASE_URL)
 @Slf4j
 public class OrderController {
 
@@ -42,7 +42,7 @@ public class OrderController {
      * @author Ankit
      * @apiNote This api is for remove order
      */
-    @DeleteMapping("/")
+    @DeleteMapping()
     public ResponseEntity<ApiResponse> removeOrder(@RequestParam String orderId) {
         log.info("Initiated request for remove order with orderId :{}", orderId);
         this.orderService.removeOrder(orderId);

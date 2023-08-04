@@ -27,4 +27,8 @@ public class ApiConstants {
     //Cart Api
     public static final String CART_BASE_URL = "/api/cart/";
     public static final String CART_ITEM_ID = "/item/{cartItemId}";
+
+    //Order
+    public static final String ORDER_BASE_URL = "/api/order/";
+
 }
