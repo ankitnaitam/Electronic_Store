@@ -11,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@ToString
 public class OrderDto {
 
     private String orderId;
@@ -22,6 +23,7 @@ public class OrderDto {
     private String billingName;
     private Date orderDate=new Date();
     private Date deliverdDate;
-    private UserDto user;
+//    private UserDto user;
+    private String userId;
     private List<OrderItemDto> orderItems = new ArrayList<>();
 }

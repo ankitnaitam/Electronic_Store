@@ -23,7 +23,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
@@ -44,8 +43,6 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private ModelMapper mapper;
 
-    private Order order;
-
     /**
      * @param orderRequest
      * @return
@@ -64,6 +61,7 @@ public class OrderServiceImpl implements OrderService {
         Cart cart = this.cartRepository.findById(cartId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + cartId));
 
         List<CartItem> cartItems = cart.getItems();
+
         if (cartItems.size() <= 0) {
             throw new BadApiRequestException("Invalid numbers of items in cart !!");
         }
@@ -72,9 +70,11 @@ public class OrderServiceImpl implements OrderService {
                 .billingName(orderRequest.getBillingName())
                 .billingPhone(orderRequest.getBillingPhone())
                 .billingAddress(orderRequest.getBillingAddress())
+                .orderDate(new Date())
                 .orderStatus(orderRequest.getOrderStatus())
                 .paymentStatus(orderRequest.getPaymentStatus())
-                .orderDate(new Date())
+                .orderId(UUID.randomUUID().toString())
+                .user(user)
                 .build();
 
         //OrderItems amount
@@ -84,9 +84,10 @@ public class OrderServiceImpl implements OrderService {
             OrderItem orderItem = OrderItem.builder()
                     .quantity(cartItem.getQuantity())
                     .product((cartItem.getProduct()))
-                    .totalPrice(cartItem.getTotalPrice())
+                    .totalPrice((int) (cartItem.getQuantity() * cartItem.getProduct().getDiscountedPrice()))
+                    .order(order)
                     .build();
-            order.setOrderAmount(orderAmount.get() + orderItem.getTotalPrice());
+            orderAmount.set(orderAmount.get() + orderItem.getTotalPrice());
             return orderItem;
         }).collect(Collectors.toList());
 
@@ -96,9 +97,6 @@ public class OrderServiceImpl implements OrderService {
         cart.getItems().clear();
         cartRepository.save(cart);
 
-        order.setUser(user);
-
-        order.setOrderId(UUID.randomUUID().toString());
         Order savedOrder = orderRepository.save(order);
         log.info("Completed dao call for save order of user :{}", orderRequest.getUserId());
         return this.mapper.map(savedOrder, OrderDto.class);

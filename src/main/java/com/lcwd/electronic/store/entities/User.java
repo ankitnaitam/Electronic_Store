@@ -3,6 +3,7 @@ package com.lcwd.electronic.store.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -34,7 +35,7 @@ public class User extends CustomFields {
     @Column(name = "user_image")
     private String imageName;
 
-    @OneToMany
-    private List<Order> order;
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
+    private List<Order> orders = new ArrayList<>();
 
 }

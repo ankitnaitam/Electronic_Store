@@ -13,7 +13,7 @@ public class CreateOrderRequest {
     private String cartId;
 
     private String orderStatus="PENDING";
-    private String paymentStatus="NOT-PAID";
+    private String paymentStatus="NOT_PAID";
     private String billingAddress;
     private String billingPhone;
     private String billingName;

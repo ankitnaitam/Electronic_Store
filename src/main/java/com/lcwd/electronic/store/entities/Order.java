@@ -18,12 +18,12 @@ public class Order {
 
     @Id
     private String orderId;
-    //Pending dispatched order delivered
+    //Pending dispatched delivered  //enum
     private String orderStatus;
-    //Paid Not-Paid
+    //Paid Not-Paid   //enum  //Boolean = true->PAID, false->NOT_PAID
     private String paymentStatus;
     private Integer orderAmount;
-    @Column(length = 100)
+    @Column(length = 1000)
     private String billingAddress;
     private String billingPhone;
     private String billingName;
@@ -32,6 +32,6 @@ public class Order {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User user;
-    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "order", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     private List<OrderItem> orderItems = new ArrayList<>();
 }
