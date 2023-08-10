@@ -83,7 +83,8 @@ public class CartServiceImpl implements CartService {
         //if cart items already present then update
         AtomicReference<Boolean> updated = new AtomicReference<>(false);
         List<CartItem> items = cart.getItems();
-        List<CartItem> updatedItems = items.stream().map(item -> {
+        //To solve OrphanRemoval issue here we just change the reference below(instead of assigning new list we performed in that exiting list) as List<CartItem> updatedItems = items.....by
+        items = items.stream().map(item -> {
             if (item.getProduct().getProductId().equals(productId)) {
                 //items already present in cart
                 log.info("Updating item details of product:{}", productId);
@@ -94,7 +95,7 @@ public class CartServiceImpl implements CartService {
             return item;
         }).collect(Collectors.toList());
 
-        cart.setItems(updatedItems);
+//        cart.setItems(updatedItems); //instead of setting new updated list we performed changes in existing list as above
 
         //create items
         if (!updated.get()) {

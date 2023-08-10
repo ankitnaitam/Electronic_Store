@@ -89,6 +89,4 @@ public class OrderController {
         log.info("Completed request to get orders having pageNumber :{},pageSize :{},sortBy :{},sortDir :{}", pageNumber, pageSize, sortBy, sortDir);
         return new ResponseEntity<>(orderDtos, HttpStatus.FOUND);
     }
-
-
 }

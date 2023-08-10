@@ -33,9 +33,9 @@ public class Cart {
     //What is happening is that Hibernate requires complete ownership of the children collection in the parent object. If you set it to a new object, Hibernate is unable to track changes to that collection and thus has no idea how to apply the cascading persistence to your objects.
     //To avoid this problem, any time we want to add or delete something to the list, we have to modify the contents of the collection instead of assigning a new one
     //Updated setter of children
-    public void setItems(List<CartItem> items) { //if we use these to solve orphanRemoval issue we will get UnsupportedOperationException breakPoint while testing addItemToCart() method
-        this.items.addAll(items);
-        for (CartItem item : items)
-            item.setCart(this);
-   }
+//    public void setItems(List<CartItem> items) { //if we use these to solve orphanRemoval issue we will get UnsupportedOperationException breakPoint while testing addItemToCart() method
+//        this.items.addAll(items);
+//        for (CartItem item : items)
+//            item.setCart(this);
+//   }
 }
