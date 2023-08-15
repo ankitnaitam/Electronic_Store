@@ -25,6 +25,6 @@ public class AuthController {
     @GetMapping("/current")
     public ResponseEntity<UserDto> getCurrentUser(Principal principal) {
         String name = principal.getName();
-        return new ResponseEntity<>(mapper.map(userDetailsService, UserDto.class), HttpStatus.OK);
+        return new ResponseEntity<>(mapper.map(userDetailsService.loadUserByUsername(name), UserDto.class), HttpStatus.OK);
     }
 }
