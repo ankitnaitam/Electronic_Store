@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -156,6 +157,11 @@ public class UserServiceImpl implements UserService {
         List<UserDto> dtos = users.stream().map((user) -> this.mapper.map(user, UserDto.class)).collect(Collectors.toList());
         log.info("Completed dao call for search user with keyword containing :{}", keyword);
         return dtos;
+    }
+
+    @Override
+    public Optional<User> findUserByEmailOptional(String email) {
+        return userRepo.findByEmail(email);
     }
 
 //    // dto to user using builder pattern
