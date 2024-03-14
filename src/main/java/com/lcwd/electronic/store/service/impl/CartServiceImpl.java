@@ -19,10 +19,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
@@ -140,6 +137,17 @@ public class CartServiceImpl implements CartService {
         User user = this.userRepository.findById(userId).orElseThrow(() -> new ResourceNotFoundException(AppConstants.USER_NOT_FOUND + userId));
         //fetch cart using fetched user
         Cart cart = this.cartRepository.findByUser(user).orElseThrow(() -> new ResourceNotFoundException(AppConstants.CART_NOT_FOUND + userId));
+        //cart.getItems().clear();
+        //The error you're encountering, java.lang.UnsupportedOperationException,
+        // typically occurs when trying to modify a collection that is immutable.
+        // Looking at your code, it seems the issue is arising from trying to clear the items of a collection that might be immutable.
+        //
+        //In your clearCart method, you're trying to clear the items of the cart using cart.getItems().clear();.
+        // This suggests that the getItems() method returns an immutable collection, hence the exception.
+        // That's why we are providing empty list as below to clear the cart
+//        ArrayList<CartItem> newItems = new ArrayList<>();
+//        cart.setItems(newItems);
+//        System.out.println(cart.getItems());
         cart.getItems().clear();
         System.out.println(cart.getItems());
         this.cartRepository.save(cart);

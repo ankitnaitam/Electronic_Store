@@ -60,9 +60,9 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> login(@RequestBody JwtRequest request) {
         this.doAuthenticate(request.getEmail(), request.getPassword());
-        UserDetails userDetails = this.userDetailsService.loadUserByUsername(request.getEmail());
-        String token = this.jwtTokenHelper.generateToken(userDetails);
-        UserDto userDto = this.mapper.map(userDetails, UserDto.class);
+        UserDetails userDetails= this.userDetailsService.loadUserByUsername(request.getEmail());
+        String token= this.jwtTokenHelper.generateToken(userDetails);
+        UserDto userDto= this.mapper.map(userDetails, UserDto.class);
         JwtResponse response = JwtResponse.builder()
                 .jwtToken(token)
                 .user(userDto)
